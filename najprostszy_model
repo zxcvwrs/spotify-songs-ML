@@ -1,0 +1,72 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNyJ6uY7++CfSyEpr0oGxIT",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/zxcvwrs/projekt-ium/blob/master/najprostszy_model\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Najprostszy model"
+      ],
+      "metadata": {
+        "id": "9zMqvl4-lZwA"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from numpy import unique\n",
+        "from numpy import where\n",
+        "from sklearn.datasets import make_classification\n",
+        "from sklearn.cluster import KMeans\n",
+        "from matplotlib import pyplot"
+      ],
+      "metadata": {
+        "id": "G38uTgwelhwz"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {
+        "id": "r2mbuN-anYOz"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from joblib import load, dump"
+      ],
+      "metadata": {
+        "id": "ukPu9u2zn3v0"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
