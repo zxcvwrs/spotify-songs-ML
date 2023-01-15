@@ -1,0 +1,4 @@
+aplikacja/models/m2_bez_smote_niestrojony filter=lfs diff=lfs merge=lfs -text
+aplikacja/models/m2_bez_smote_strojony filter=lfs diff=lfs merge=lfs -text
+modele/m2_bez_smote_niestrojony filter=lfs diff=lfs merge=lfs -text
+modele/m2_bez_smote_strojony filter=lfs diff=lfs merge=lfs -text

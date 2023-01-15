@@ -7,6 +7,9 @@ from datetime import date
 import db
 
 
+model_A = load("models\m2_bez_smote_niestrojony")
+model_B = load("models\m2_bez_smote_strojony")
+
 app = FastAPI()
 class request_body(BaseModel):
     id : str
@@ -59,21 +62,23 @@ def get_track_features(data : request_body):
     ]]
     return track_features
 
+def get_prediction(model, data : request_body):
+    track_features = get_track_features(data)
+    prediction = model.predict(track_features)
+    return prediction[0]
     
 @app.post("/predict_A")
 def predict_A(data : request_body):
-    model = load("models\m1_classifier")
-    track_features = get_track_features(data)
-    prediction = model.predict(track_features)
-    record = create_db_record(data, prediction[0],"A")
+    prediction = get_prediction(model_A, data)
+    record = create_db_record(data, prediction,"A")
     write_to_db(record)
-    return {'genre' : prediction[0]}
+    return {'genre' : prediction}
 
 @app.post("/predict_B")
 def predict_B(data : request_body):
-    #model = load("models\m1_classifier")
-    track_features = get_track_features(data)
-    #prediction = model.predict(track)
-    return {'genre' : 'unknown'}
+    prediction = get_prediction(model_B, data)
+    record = create_db_record(data, prediction,"B")
+    write_to_db(record)
+    return {'genre' : prediction}
 
      
