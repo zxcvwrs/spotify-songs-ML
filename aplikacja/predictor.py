@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
- 
+
 from joblib import load
-import json
+from datetime import date
+
+import db
 
 
 app = FastAPI()
@@ -25,44 +27,25 @@ class request_body(BaseModel):
     valence : float
     tempo : float
 
-def append_to_json(new_data, filename='history.json'):
-    with open(filename) as fp:
-        listObj = json.load(fp)
-    listObj.append(new_data)
-    with open(filename, 'w') as json_file:
-        json.dump(listObj, json_file, indent=4)
 
-def save_to_history(data : request_body, genre : str, group : str ):
-    line = {
-        "id" : data.id,
-        "name" : data.name,
-        "popularity" : data.popularity,
-        "duration_ms" : data.duration_ms,
-        "explicit" : data.explicit,
-        "id_artist" : data.id_artist,
-        "release_date" : data.release_date,
-        "danceability" : data.danceability,
-        "key" : data.key,
-        "energy" : data.energy,
-        "loudness" : data.loudness,
-        "speechiness" : data.speechiness,
-        "acousticness" : data.acousticness,
-        "instrumentalness" : data.instrumentalness,
-        "liveness" : data.liveness,
-        "valence" : data.valence,
-        "tempo" : data.tempo,
-        "genre" : genre,
-        "group" : group
-    }
-    append_to_json(line)
-    
+def create_db_record(data : request_body, genre : str, group : str ):
+    prediction_date = date.today()
+    prediction_date.strftime('%m/%d/%Y')
+    record = [
+            prediction_date,group,data.id,data.name,data.popularity,data.duration_ms,
+            data.explicit,data.id_artist,data.release_date,
+            data.danceability,data.key,data.energy,data.loudness,
+            data.speechiness,data.acousticness,data.instrumentalness,
+            data.liveness,data.valence,data.tempo,genre
+            ]
+    return record
 
+def write_to_db(record):
+    db_connection = db.create_connection(r"database\saved_data.db")
+    db.add_prediction(db_connection,record)
 
-@app.post("/predict_A")
-def predict_A(data : request_body):
-    model = load("models\m1_classifier")
+def get_track_features(data : request_body):
     track_features = [[
-
         data.danceability,
         data.key,
         data.energy,
@@ -74,28 +57,23 @@ def predict_A(data : request_body):
         data.valence,
         data.tempo
     ]]
+    return track_features
+
+    
+@app.post("/predict_A")
+def predict_A(data : request_body):
+    model = load("models\m1_classifier")
+    track_features = get_track_features(data)
     prediction = model.predict(track_features)
-    save_to_history(data, "prediction","A")
+    record = create_db_record(data, prediction[0],"A")
+    write_to_db(record)
     return {'genre' : prediction[0]}
 
 @app.post("/predict_B")
 def predict_B(data : request_body):
     #model = load("models\m1_classifier")
-    track_features = [[
-        data.danceability,
-        data.key,
-        data.energy,
-        data.loudness,
-        data.speechiness,
-        data.acousticness,
-        data.instrumentalness,
-        data.liveness,
-        data.valence,
-        data.tempo
-    ]]
+    track_features = get_track_features(data)
     #prediction = model.predict(track)
     return {'genre' : 'unknown'}
-
-
 
      
